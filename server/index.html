@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT</title>
+    <style>
+
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+body, html {
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+    height: 50vh; 
+    width: 100%; 
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    position: relative;
+    background-color: rgb(66, 65, 71);
+}
+
+.container {
+    text-align: center;
+    z-index: 1; 
+    width: 100%; 
+    max-width: 800px;
+}
+
+.header {
+    margin-bottom: 20px;
+    font-size: 40px;
+    color: rgb(165, 165, 165);
+}
+
+.input-container {
+    flex: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    max-width: 100%; 
+}
+
+.input-container input {
+    flex: 1;
+    margin-right: 10px;
+    padding: 5px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 0px;
+}
+
+.input-container button {
+    padding: 5px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 0px;
+}
+
+.output-container {
+    position: absolute;
+    top: 70%; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 45%;
+    padding-left: calc(10%) - 10px; 
+    text-align: left;
+    white-space: pre-line;
+    color: rgb(221, 221, 221);
+}
+
+
+
+.output-element {
+    background-color: rgb(83, 82, 90);
+    border-radius: 10px;
+    margin: 10px 1px 1px 10px;
+    font-size: 18px;
+    padding: 5px 5px 5px 5px;
+}
+
+.output-element2 {
+    background-color: rgb(83, 82, 90);
+        border-radius: 10px;
+    margin: 10px 1px 1px 1px;
+    font-size: 18px;
+    padding: 5px 5px 5px 5px;
+}
+
+
+
+
+    </style>    
+</head>
+<body>
+    <div class="container">
+        <h1 class="header">GPT</h1>
+        <div class="input-container">
+            <input type="text" id="text" name="text" value="" placeholder="prompt"> 
+            <button id="sendButton" type="button" onclick="sendData()">Send</button>
+        </div>
+        <div id="response" class="output-container"></div>
+    </div>
+
+    <script>
+        function sendData() {
+            var userInput = document.getElementById("text").value;
+            if(userInput==""){
+                return;
+            }
+            const data = { message: userInput };
+            fetch('/run-python', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {           
+                
+                const outputContainer = document.getElementById('response');
+                let question = document.createElement('div');
+                question.className = 'output-element';
+                question.innerText = userInput;
+                outputContainer.appendChild(question);
+
+                let answer = document.createElement('div');
+                answer.className = 'output-element2';
+                answer.innerText = data.message;
+                outputContainer.appendChild(answer)
+
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
